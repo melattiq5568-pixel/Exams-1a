@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compte à rebours – 4 janvier 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fond: #14213d;
+    --carte: #1d2f57;
+    --texte: #f6f1e7;
+    --accent: #fca311;
+    --doux: #9fb0d3;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    min-height: 100vh;
+    background: var(--fond);
+    color: var(--texte);
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.5rem 1.2rem;
+  }
+  h1 { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 800; text-align: center; }
+  h1 span { color: var(--doux); font-weight: 500; display: block; font-size: 1rem; margin-top: .4rem; }
+
+  .compteur { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; }
+  .bloc { background: var(--carte); border-radius: 18px; padding: 1rem 1.2rem; min-width: 92px; text-align: center; }
+  .bloc b { display: block; font-size: clamp(2rem, 8vw, 3.4rem); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .bloc small { color: var(--doux); font-size: .9rem; }
+
+  .photo {
+    width: min(320px, 85vw);
+    aspect-ratio: 1;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--carte);
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .message {
+    width: min(520px, 92vw);
+    font-family: "Caveat", cursive;
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    text-align: center;
+    padding: .4rem;
+    border-bottom: 2px solid var(--doux);
+  }
+
+  .fini { color: var(--accent); font-size: 1.4rem; font-weight: 800; display: none; }
+</style>
+</head>
+<body>
+
+<h1>Temps restant jusqu’au 4 janvier 2027
+  <span id="date-cible"></span>
+</h1>
+
+<div class="compteur" id="compteur">
+  <div class="bloc"><b id="jours">0</b><small>jours</small></div>
+  <div class="bloc"><b id="heures">00</b><small>heures</small></div>
+  <div class="bloc"><b id="minutes">00</b><small>minutes</small></div>
+  <div class="bloc"><b id="secondes">00</b><small>secondes</small></div>
+</div>
+<p class="fini" id="fini">C’est le grand jour !</p>
+
+<!-- CHANGEZ ICI : mettez le nom de votre photo (dans le même dossier) ou un lien internet -->
+<div class="photo">
+  <img src="images.jpeg" alt="Ma photo">
+</div>
+
+<!-- CHANGEZ ICI si vous voulez modifier le message -->
+<p class="message">ma b9a walo achabab bdaw thfdo</p>
+
+<script>
+  // Date cible : 4 janvier 2027 à 00:00 (heure locale)
+  const cible = new Date(2027, 0, 4, 0, 0, 0);
+  const el = id => document.getElementById(id);
+  const deuxChiffres = n => String(n).padStart(2, "0");
+
+  el("date-cible").textContent = cible.toLocaleDateString("fr-FR", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  });
+
+  function miseAJour() {
+    const reste = cible - new Date();
+    if (reste <= 0) {
+      el("compteur").style.display = "none";
+      el("fini").style.display = "block";
+      clearInterval(minuteur);
+      return;
+    }
+    const s = Math.floor(reste / 1000);
+    el("jours").textContent = Math.floor(s / 86400);
+    el("heures").textContent = deuxChiffres(Math.floor((s % 86400) / 3600));
+    el("minutes").textContent = deuxChiffres(Math.floor((s % 3600) / 60));
+    el("secondes").textContent = deuxChiffres(s % 60);
+  }
+  miseAJour();
+  const minuteur = setInterval(miseAJour, 1000);
+</script>
+</body>
+</html>
